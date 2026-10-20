@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LaunchPad Pro — Plataforma de Infoprodutos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            slate: {
+              950: '#0f172a',
+              900: '#0f172a',
+              800: '#1e293b',
+              700: '#334155',
+            },
+            neon: {
+              purple: '#a855f7',
+              blue: '#3b82f6',
+              emerald: '#10b981',
+            }
+          },
+          boxShadow: {
+            'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+            'neon': '0 0 20px rgba(168, 85, 247, 0.4)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    
+    body {
+      background: #0f172a;
+      background-image: 
+        radial-gradient(ellipse at 20% 20%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(59, 130, 246, 0.10) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.06) 0%, transparent 70%);
+      min-height: 100vh;
+    }
+    
+    .glass {
+      background: rgba(30, 41, 59, 0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .glass-strong {
+      background: rgba(30, 41, 59, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    
+    .tab-btn {
+      transition: all 0.25s ease;
+    }
+    
+    .tab-btn.active {
+      background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+      color: white;
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
+    }
+    
+    .region-btn.active {
+      background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+      color: white;
+    }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(168, 85, 247, 0.25);
+      border-color: rgba(168, 85, 247, 0.4);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #a855f7, #3b82f6, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .chat-bubble-user {
+      background: linear-gradient(135deg, #a855f7, #6366f1);
+    }
+    
+    .chat-bubble-ai {
+      background: rgba(51, 65, 85, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .modal-overlay {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+    }
+    
+    .scroll-thin::-webkit-scrollbar {
+      width: 6px;
+    }
+    .scroll-thin::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
+    .scroll-thin::-webkit-scrollbar-thumb {
+      background: rgba(168, 85, 247, 0.5);
+      border-radius: 10px;
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.35s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .pulse-glow {
+      animation: pulseGlow 2s infinite;
+    }
+    
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+      50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.7); }
+    }
+  </style>
+</head>
+<body class="text-slate-100 antialiased">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-50 glass-strong border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-18">
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 via-blue-500 to-emerald-400 flex items-center justify-center shadow-neon">
+            <i class="fas fa-rocket text-white text-lg"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold tracking-tight">LaunchPad <span class="gradient-text">Pro</span></h1>
+            <p class="text-[10px] text-slate-400 -mt-0.5 hidden sm:block">Infoprodutos & Ferramentas</p>
+          </div>
+        </div>
+
+        <!-- Nav Tabs (Desktop) -->
+        <nav class="hidden md:flex items-center gap-1 bg-slate-800/50 p-1 rounded-xl">
+          <button onclick="switchTab('diretorio')" class="tab-btn active px-4 py-2 rounded-lg text-sm font-medium" data-tab="diretorio">
+            <i class="fas fa-th-large mr-1.5"></i> Diretório
+          </button>
+          <button onclick="switchTab('organizador')" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white" data-tab="organizador">
+            <i class="fas fa-layer-group mr-1.5"></i> Organizador
+          </button>
+          <button onclick="switchTab('ideias')" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white" data-tab="ideias">
+            <i class="fas fa-lightbulb mr-1.5"></i> Ideias
+          </button>
+          <button onclick="switchTab('assistente')" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white" data-tab="assistente">
+            <i class="fas fa-robot mr-1.5"></i> Assistente IA
+          </button>
+        </nav>
+
+        <!-- VIP Button -->
+        <button onclick="openVipModal()" class="pulse-glow bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-semibold px-4 py-2.5 rounded-xl text-sm flex items-center gap-2 shadow-lg transition">
+          <i class="fas fa-crown"></i>
+          <span class="hidden sm:inline">Seja VIP</span> 🚀
+        </button>
+      </div>
+
+      <!-- Mobile Nav -->
+      <div class="md:hidden flex overflow-x-auto gap-1 pb-3 -mx-1 px-1">
+        <button onclick="switchTab('diretorio')" class="tab-btn active flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium" data-tab="diretorio">
+          <i class="fas fa-th-large mr-1"></i> Diretório
+        </button>
+        <button onclick="switchTab('organizador')" class="tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300" data-tab="organizador">
+          <i class="fas fa-layer-group mr-1"></i> Organizador
+        </button>
+        <button onclick="switchTab('ideias')" class="tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300" data-tab="ideias">
+          <i class="fas fa-lightbulb mr-1"></i> Ideias
+        </button>
+        <button onclick="switchTab('assistente')" class="tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300" data-tab="assistente">
+          <i class="fas fa-robot mr-1"></i> IA
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
+
+    <!-- ==================== TAB 1: DIRETÓRIO ==================== -->
+    <section id="tab-diretorio" class="tab-content fade-in">
+      <div class="mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold mb-2">Diretório de Ferramentas</h2>
+        <p class="text-slate-400">Plataformas recomendadas para criar, vender e escalar seus infoprodutos.</p>
+      </div>
+
+      <!-- Region Filter -->
+      <div class="flex flex-wrap gap-2 mb-8">
+        <button onclick="switchRegion('mocambique')" class="region-btn active px-5 py-2.5 rounded-xl text-sm font-medium glass transition" data-region="mocambique">
+          <i class="fas fa-map-marker-alt mr-2 text-emerald-400"></i> Moçambique & PALOP
+        </button>
+        <button onclick="switchRegion('brasil')" class="region-btn px-5 py-2.5 rounded-xl text-sm font-medium glass text-slate-300 hover:text-white transition" data-region="brasil">
+          <i class="fas fa-globe mr-2 text-blue-400"></i> Brasil & Internacional
+        </button>
+      </div>
+
+      <!-- Moçambique Cards -->
+      <div id="region-mocambique" class="region-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- EscalePay -->
+        <div class="glass card-hover rounded-2xl p-6 flex flex-col">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-2xl font-bold shadow-lg">
+              EP
+            </div>
+            <div>
+              <h3 class="font-bold text-lg">EscalePay</h3>
+              <span class="text-xs text-emerald-400 font-medium">Pagamentos MZ</span>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm mb-4 flex-grow">
+            Solução de pagamentos local com suporte nativo a <strong>M-Pesa</strong>, <strong>E-Mola</strong> e vendas em Meticais. Ideal para infoprodutores em Moçambique.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-5">
+            <span class="px-2.5 py-1 rounded-full text-xs bg-emerald-500/20 text-emerald-300">M-Pesa</span>
+            <span class="px-2.5 py-1 rounded-full text-xs bg-blue-500/20 text-blue-300">E-Mola</span>
+            <span class="px-2.5 py-1 rounded-full text-xs bg-purple-500/20 text-purple-300">Meticais</span>
+          </div>
+          <a href="https://escalepay.com" target="_blank" rel="noopener" class="w-full text-center py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 font-semibold text-sm transition">
+            Acessar Plataforma <i class="fas fa-external-link-alt ml-1"></i>
+          </a>
+        </div>
+
+        <!-- Tutora -->
+        <div class="glass card-hover rounded-2xl p-6 flex flex-col">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-2xl font-bold shadow-lg">
+              TU
+            </div>
+            <div>
+              <h3 class="font-bold text-lg">Tutora</h3>
+              <span class="text-xs text-purple-400 font-medium">Educação Digital</span>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm mb-4 flex-grow">
+            Plataforma de cursos e mentoria focada no mercado PALOP. Aceita pagamentos locais e permite criar áreas de membros completas.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-5">
+            <span class="px-2.5 py-1 rounded-full text-xs bg-purple-500/20 text-purple-300">Cursos</span>
+            <span class="px-2.5 py-1 rounded-full text-xs bg-emerald-500/20 text-emerald-300">M-Pesa</span>
+            <span class="px-2.5 py-1 rounded-full text-xs bg-blue-500/20 text-blue-300">PALOP</span>
+          </div>
+          <a href="https://tutora.co.mz" target="_blank" rel="noopener" class="w-full text-center py-3 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-400 hover:to-indigo-400 font-semibold text-sm transition">
+            Acessar Plataforma <i class="fas fa-external-link-alt ml-1"></i>
+          </a>
+        </div>
+
+        <!-- E-Davinci -->
+        <div class="glass card-hover rounded-2xl p-6 flex flex-col">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-2xl font-bold shadow-lg">
+              ED
+            </div>
+            <div>
+              <h3 class="font-bold text-lg">E-Davinci</h3>
+              <span class="text-xs text-blue-400 font-medium">Infoprodutos MZ</span>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm mb-4 flex-grow">
+            Ecossistema local para criação e venda de produtos digitais. Integração com carteiras móveis e suporte a vendas em Meticais.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-5">
+            <span class="px-2.5 py-1 rounded-full text-xs bg-blue-500/20 text-blue-300">E-books</span>
+            <span class="px-2.5 py-1 rounded-full text-xs bg-emerald-500/20 text-emerald-300">E-Mola</span>
+            <span class="px-2.5 py-1 rounded-full text-xs bg-purple-500/20 text-purple-300">Checkout</span>
+          </div>
+          <a href="https://edavinci.co.mz" target="_blank" rel="noopener" class="w-full text-center py-3 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 font-semibold text-sm transition">
+            Acessar Plataforma <i class="fas fa-external-link-alt ml-1"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Brasil & Internacional Cards -->
+      <div id="region-brasil" class="region-content hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Kiwify -->
+        <div class="glass card-hover rounded-2xl p-6 flex flex-col">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center overflow-hidden shadow-lg">
+              <img src="https://cdn.simpleicons.org/kiwify/22c55e" alt="Kiwify" class="w-8 h-8" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xl font-bold\'>K</span>'" />
+            </div>
+            <div>
+              <h3 class="font-bold text-lg">Kiwify</h3>
+              <span class="text-xs text-emerald-400 font-medium">Brasil</span>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm mb-4 flex-grow">
+            Uma das plataformas mais usadas no Brasil para venda de infoprodutos. Checkout otimizado, área de membros e afiliados.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-5">
+            <span class="px-2.5 py-1 rounded-full text-xs bg-emerald-500/20 text-emerald-300">Checkout</span>
+            <span class="px-2.5 py-1 rounded-full text-xs bg-blue-500/20 text-blue-300">Afiliados</span>
+          </div>
+          <a href="https://kiwify.com.br" target="_blank" rel="noopener" class="w-full text-center py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 font-semibold text-sm transition">
+            Acessar Plataforma <i class="fas fa-external-link-alt ml-1"></i>
+          </a>
+        </div>
+
+        <!-- Hotmart -->
+        <div class="glass card-hover rounded-2xl p-6 flex flex-col">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center overflow-hidden shadow-lg">
+              <img src="https://cdn.simpleicons.org/hotmart/f97316" alt="Hotmart" class="w-8 h-8" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xl font-bold\'>H</span>'" />
+            </div>
+            <div>
+              <h3 class="font-bold text-lg">Hotmart</h3>
+              <span class="text-xs text-orange-400 font-medium">Global</span>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm mb-4 flex-grow">
+            Maior marketplace de produtos digitais da América Latina. Alcance global, sistema de afiliados robusto e ferramentas de marketing.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-5">
+            <span class="px-2.5 py-1 rounded-full text-xs bg-orange-500/20 text-orange-300">Marketplace</span>
+            <span class="px-2.5 py-1 rounded-full text-xs bg-red-500/20 text-red-300">Afiliados</span>
+          </div>
+          <a href="https://hotmart.com" target="_blank" rel="noopener" class="w-full text-center py-3 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-400 hover:to-red-400 font-semibold text-sm transition">
+            Acessar Plataforma <i class="fas fa-external-link-alt ml-1"></i>
+          </a>
+        </div>
+
+        <!-- Shopify -->
+        <div class="glass card-hover rounded-2xl p-6 flex flex-col">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-green-500 to-lime-500 flex items-center justify-center overflow-hidden shadow-lg">
+              <img src="https://cdn.simpleicons.org/shopify/22c55e" alt="Shopify" class="w-8 h-8" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xl font-bold\'>S</span>'" />
+            </div>
+            <div>
+              <h3 class="font-bold text-lg">Shopify</h3>
+              <span class="text-xs text-green-400 font-medium">Internacional</span>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm mb-4 flex-grow">
+            Crie lojas profissionais para produtos físicos e digitais. Integrações poderosas e tema customizável.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-5">
+            <span class="px-2.5 py-1 rounded-full text-xs bg-green-500/20 text-green-300">E-commerce</span>
+            <span class="px-2.5 py-1 rounded-full text-xs bg-lime-500/20 text-lime-300">Apps</span>
+          </div>
+          <a href="https://shopify.com" target="_blank" rel="noopener" class="w-full text-center py-3 rounded-xl bg-gradient-to-r from-green-500 to-lime-500 hover:from-green-400 hover:to-lime-400 font-semibold text-sm transition">
+            Acessar Plataforma <i class="fas fa-external-link-alt ml-1"></i>
+          </a>
+        </div>
+
+        <!-- AliExpress -->
+        <div class="glass card-hover rounded-2xl p-6 flex flex-col">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-500 to-yellow-500 flex items-center justify-center overflow-hidden shadow-lg">
+              <img src="https://cdn.simpleicons.org/aliexpress/f97316" alt="AliExpress" class="w-8 h-8" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xl font-bold\'>A</span>'" />
+            </div>
+            <div>
+              <h3 class="font-bold text-lg">AliExpress</h3>
+              <span class="text-xs text-orange-400 font-medium">Dropshipping</span>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm mb-4 flex-grow">
+            Fonte principal de produtos para dropshipping. Preços competitivos e fornecedores verificados em todo o mundo.
+          </p>
+          <div class="flex flex-wrap gap-2 mb-5">
+            <span class="px-2.5 py-1 rounded-full text-xs bg-orange-500/20 text-orange-300">Dropshipping</span>
+            <span class="px-2.5 py-1 rounded-full text-xs bg-yellow-500/20 text-yellow-300">Fornecedores</span>
+          </div>
+          <a href="https://aliexpress.com" target="_blank" rel="noopener" class="w-full text-center py-3 rounded-xl bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-400 hover:to-yellow-400 font-semibold text-sm transition">
+            Acessar Plataforma <i class="fas fa-external-link-alt ml-1"></i>
+          </a>
+        </div>
+
+        <!-- Eduzz -->
+        <div class="glass card-hover rounded-2xl p-6 flex flex-col">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center overflow-hidden shadow-lg">
+              <span class="text-xl font-bold">EZ</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg">Eduzz</h3>
+              <span class="text-xs text-violet-400 font-medium">Brasil</span>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm mb-4 flex-grow">
+            Plataforma completa para produtores e afiliados. Checkout, gestão de alunos e ferramentas de conversã
